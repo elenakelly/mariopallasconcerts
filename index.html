@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ISL Music — Concerts with Mr. Pallas</title>
+<title>ISL Music · Concerts with Mr. Pallas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -374,11 +374,11 @@
     <div class="hero-grid">
       <div class="hero-copy">
         <h1>Every stage<br>deserves its encore.</h1>
-        <p class="lede">I'm Mr. Pallas, and for these next two years our music room keeps turning into a stage — concert after concert, first solo after first solo. Here's what came before, what's coming up, and how you get your name on the program.</p>
+        <p class="lede">I'm Mr. Pallas, and for these last two years our music room keeps turning into a stage, concert after concert, first solo after first solo. Here's what came before, what's coming up, and how you get your name on the program.</p>
         <a href="#concerts" class="hero-cta">See what's coming up ↓</a>
       </div>
       <div class="hero-note">
-        Any instrument, any level. If you can carry a rhythm, hum a tune, or just want to try — there's a spot for you on one of these nights.
+        Any instrument, any level. If you can carry a rhythm, hum a tune, or just want to try, there's a spot for you on one of these nights.
       </div>
     </div>
   </div>
@@ -391,7 +391,7 @@
         <p class="eyebrow">From the stage</p>
         <h2>The room remembers<br>every note.</h2>
       </div>
-      <p class="lede" style="max-width:32ch;">A few moments from recent concerts — tap through to watch.</p>
+      <p class="lede" style="max-width:32ch;">A few moments from recent concerts, tap through to watch.</p>
     </div>
     <div class="gallery-scroll" id="galleryScroll"></div>
     <p class="gallery-hint">← scroll or drag →</p>
@@ -405,7 +405,7 @@
         <p class="eyebrow">Up next</p>
         <h2>Pick your night.</h2>
       </div>
-      <p class="lede" style="max-width:32ch;">Tap a ticket to lock that date into your sign-up below.</p>
+      <p class="lede" style="max-width:32ch;">Tap a ticket to lock that date into your form below.</p>
     </div>
     <div class="ticket-grid" id="ticketGrid"></div>
   </div>
@@ -418,13 +418,13 @@
         <p class="eyebrow">Take the stage</p>
         <h2>Your turn under the lights.</h2>
       </div>
-      <p class="lede" style="max-width:34ch;">Fill this in and I'll be in touch to sort out the details. Nothing here is a final commitment — just tell me where you're at.</p>
+      <p class="lede" style="max-width:34ch;">Fill this in and I'll be in touch to sort out the details. Nothing here is a final commitment, just tell me where you're at.</p>
     </div>
 
     <div class="form-panel">
       <div class="selected-strip" id="selectedStrip">
         <span class="dot"></span>
-        <span>No date selected yet — pick a ticket above, or choose one here: </span>
+        <span>No date selected yet, pick a ticket above, or choose one here: </span>
         <select id="concertSelect" style="width:auto; padding:6px 10px; font-family:var(--font-mono); font-size:12.5px;"></select>
       </div>
 
@@ -454,13 +454,13 @@
         </div>
 
         <div class="field">
-          <label for="fPiece">Piece or song you're thinking of playing <span class="hint" style="display:inline; text-transform:none;">(optional — totally fine if you don't know yet)</span></label>
+          <label for="fPiece">Piece or song you're thinking of playing <span class="hint" style="display:inline; text-transform:none;">(optional, totally fine if you don't know yet)</span></label>
           <input type="text" id="fPiece" placeholder="e.g. still deciding!">
         </div>
 
         <div class="field">
           <label for="fNotes">Anything else I should know?</label>
-          <textarea id="fNotes" placeholder="Solo, duet, need a music stand, nervous about performing for the first time — whatever's on your mind."></textarea>
+          <textarea id="fNotes" placeholder="Solo, duet, need a music stand, nervous about performing for the first time, whatever's on your mind."></textarea>
         </div>
 
         <button type="submit" class="submit-btn">Reserve my spot 🎤</button>
@@ -468,7 +468,7 @@
       </form>
 
       <div class="confirm-card" id="confirmCard">
-        <div class="stub">ADMIT ONE — BACKSTAGE PASS</div>
+        <div class="stub">ADMIT ONE · BACKSTAGE PASS</div>
         <h3 id="confirmName">You're on the list!</h3>
         <p id="confirmDetails"></p>
         <div class="btnrow">
@@ -484,32 +484,33 @@
   <div class="wrap">
     <p>International School of Laren · Music Department</p>
     <p>Questions? Find Mr. Pallas in the music room.</p>
+    <p style="flex-basis:100%; opacity:.6; margin-top:6px;">© 2026 · Built by Elena Kane.</p>
   </div>
 </footer>
 
 <script>
 /* =========================================================================
-   EDIT ME — everyone editing this site only needs to touch this block.
+   EDIT ME: everyone editing this site only needs to touch this block.
 
-   1) MARIO_EMAIL: the address sign-ups get sent to.
+   1) MARIO_EMAIL: the address signups get sent to.
    2) CONCERTS: your real concert dates. Add or remove entries freely.
    3) VIDEOS: your real YouTube videos. Paste the video ID from the URL
       (the part after "watch?v="). Leave youtubeId as "" for a "coming
       soon" placeholder card.
    ========================================================================= */
-const MARIO_EMAIL = "mario.pallas@islaren.example";
+const MARIO_EMAIL = "m.pallas@atscholen.nl";
 
 const CONCERTS = [
-  { id: "autumn26", day: "16", month: "OCT", year: "2026", title: "Autumn Recital", time: "7:00 PM", venue: "ISL Auditorium" },
-  { id: "winter26", day: "11", month: "DEC", year: "2026", title: "Winter Concert",  time: "6:30 PM", venue: "ISL Auditorium" },
-  { id: "spring27", day: "19", month: "MAR", year: "2027", title: "Spring Showcase", time: "7:00 PM", venue: "ISL Auditorium" },
-  { id: "gala27",   day: "11", month: "JUN", year: "2027", title: "Year-End Gala",   time: "7:00 PM", venue: "ISL Auditorium" }
+  { id: "autumn26", day: "16", month: "OCT", year: "2026", title: "Autumn Recital" },
+  { id: "winter26", day: "11", month: "DEC", year: "2026", title: "Winter Concert" },
+  { id: "spring27", day: "19", month: "MAR", year: "2027", title: "Spring Showcase" },
+  { id: "gala27",   day: "11", month: "JUN", year: "2027", title: "Year End Gala" }
 ];
 
 const VIDEOS = [
   { title: "ISL Music Night", tag: "Dec 2025", youtubeId: "UbHfwEpfA1E" },
   { title: "Teachers Act", tag: "Jun 2025", youtubeId: "3BZk-NJ1-nQ" },
-  { title: "November Rain — ISL Symphonic Orchestra", tag: "Graduation, May 2026", youtubeId: "iGbDCpN5Vzw" }
+  { title: "November Rain · ISL Symphonic Orchestra", tag: "Graduation, May 2026", youtubeId: "iGbDCpN5Vzw" }
 ];
 /* ========================================================================= */
 
@@ -523,10 +524,10 @@ const INSTRUMENTS = [
 ];
 
 const EXPERIENCE_LABELS = [
-  "Brand new to this — never played before 🌱",
+  "Brand new to this, never played before 🌱",
   "A few months in, still learning the basics 🎯",
-  "A year or two — comfortable with the fundamentals 🎵",
-  "Several years — I can hold my own 🎸",
+  "A year or two, comfortable with the fundamentals 🎵",
+  "Several years, I can hold my own 🎸",
   "This is basically my superpower ⚡"
 ];
 
@@ -577,7 +578,6 @@ CONCERTS.forEach(c => {
     <div class="ticket-main">
       <div class="ticket-date"><span class="day">${c.day}</span><span class="month">${c.month} ${c.year}</span></div>
       <div class="ticket-title">${c.title}</div>
-      <div class="ticket-sub">${c.venue} · ${c.time}</div>
     </div>
     <div class="ticket-perf">
       <span>ADMIT ONE</span>
@@ -588,7 +588,7 @@ CONCERTS.forEach(c => {
 
   const opt = document.createElement("option");
   opt.value = c.id;
-  opt.textContent = `${c.title} — ${c.month} ${c.day}, ${c.year}`;
+  opt.textContent = `${c.title} · ${c.month} ${c.day}, ${c.year}`;
   concertSelect.appendChild(opt);
 });
 
@@ -603,7 +603,7 @@ function selectConcert(id){
   const strip = document.getElementById("selectedStrip");
   const c = concertById(id);
   if (c){
-    strip.innerHTML = `<span class="dot"></span><span>You're signing up for <b>${c.title}</b> — ${c.month} ${c.day}, ${c.year}. Not the right night? </span>`;
+    strip.innerHTML = `<span class="dot"></span><span>You're signing up for <b>${c.title}</b>, ${c.month} ${c.day}, ${c.year}. Not the right night? </span>`;
     const swap = document.createElement("span");
     swap.textContent = "Pick another below.";
     swap.style.textDecoration = "underline";
@@ -662,7 +662,7 @@ form.addEventListener("submit", e => {
     return;
   }
   if (!selectedInstrument){
-    formError.textContent = "Pick what you play — tap one of the icons above.";
+    formError.textContent = "Pick what you play, tap one of the icons above.";
     document.getElementById("instrumentGrid").scrollIntoView({behavior:"smooth", block:"center"});
     return;
   }
@@ -689,13 +689,13 @@ form.addEventListener("submit", e => {
 document.getElementById("sendEmailBtn").addEventListener("click", () => {
   if (!lastSubmission) return;
   const s = lastSubmission;
-  const subject = `Concert sign-up: ${s.name} (${s.instrumentLabel}) — ${s.concert.title}`;
+  const subject = `Concert signup: ${s.name} (${s.instrumentLabel}) for ${s.concert.title}`;
   const body =
 `Name: ${s.name}
 Class: ${s.klass}
 Instrument: ${s.instrumentLabel}
 Experience: ${s.expLabelText}
-Concert: ${s.concert.title} — ${s.concert.month} ${s.concert.day}, ${s.concert.year}
+Concert: ${s.concert.title}, ${s.concert.month} ${s.concert.day}, ${s.concert.year}
 Piece/song: ${s.piece || "(not decided yet)"}
 Notes: ${s.notes || "(none)"}`;
   window.location.href = `mailto:${MARIO_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -709,7 +709,7 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   document.querySelectorAll(".instrument-btn").forEach(b => b.classList.remove("active"));
   selectConcert(null);
   document.getElementById("selectedStrip").innerHTML =
-    `<span class="dot"></span><span>No date selected yet — pick a ticket above, or choose one here: </span>`;
+    `<span class="dot"></span><span>No date selected yet, pick a ticket above, or choose one here: </span>`;
   document.getElementById("selectedStrip").appendChild(concertSelect);
   renderExpLabel();
   window.scrollTo({top:0, behavior:"smooth"});
