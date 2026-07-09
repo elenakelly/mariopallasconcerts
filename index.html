@@ -332,6 +332,54 @@
   }
   .ghost-btn:hover{border-color:var(--gold-soft);}
 
+  /* ============ STAFF PLAYER ============ */
+  .staff-board{
+    display:grid; grid-template-columns:38px 1fr; gap:0;
+    margin-top:8px;
+  }
+  .row-labels{display:grid; grid-template-rows:repeat(9,1fr);}
+  .row-labels span{
+    font-family:var(--font-mono); font-size:10.5px; color:var(--cream-faint);
+    display:flex; align-items:center; justify-content:flex-end; padding-right:10px;
+  }
+  .grid-area{
+    position:relative; height:216px;
+    background:var(--navy-2); border:1px solid var(--line);
+    border-radius:12px; overflow:hidden;
+  }
+  .staff-lines-bg{position:absolute; inset:0; width:100%; height:100%;}
+  .staff-lines-bg line{stroke:var(--cream-faint); stroke-width:0.35;}
+  .note-grid{
+    position:relative; z-index:2; height:100%;
+    display:grid; grid-template-columns:repeat(16,1fr); grid-template-rows:repeat(9,1fr);
+  }
+  .note-cell{
+    width:12px; height:12px; margin:auto; border-radius:50%;
+    background:transparent; border:1px solid rgba(246,241,228,0.2);
+    cursor:pointer; transition:background .12s ease, transform .12s ease, box-shadow .12s ease;
+  }
+  .note-cell.beat{box-shadow:inset 1px 0 0 var(--line);}
+  .note-cell:hover{background:var(--gold-soft); transform:scale(1.15);}
+  .note-cell.active{background:var(--gold); border-color:var(--gold); box-shadow:0 0 10px var(--gold-soft);}
+  .note-cell.step-live{border-color:var(--rose);}
+  .note-cell.pulse{transform:scale(1.7); box-shadow:0 0 16px var(--gold);}
+  .playhead{
+    position:absolute; top:0; left:-10%; width:2px; height:100%;
+    background:var(--rose); z-index:3; opacity:.85; pointer-events:none;
+  }
+  .staff-controls{
+    display:flex; align-items:center; gap:14px; margin-top:22px; flex-wrap:wrap;
+  }
+  .staff-hint{
+    font-family:var(--font-mono); font-size:11.5px; color:var(--cream-faint);
+    transition:opacity .4s ease;
+  }
+  @media (max-width:640px){
+    .grid-area{height:180px;}
+    .row-labels span{font-size:9px; padding-right:6px;}
+    .staff-board{grid-template-columns:30px 1fr;}
+  }
+
   /* ============ FOOTER ============ */
   footer{border-top:1px solid var(--line); padding:36px 0;}
   footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;}
@@ -408,6 +456,40 @@
       <p class="lede" style="max-width:32ch;">Tap a ticket to lock that date into your form below.</p>
     </div>
     <div class="ticket-grid" id="ticketGrid"></div>
+  </div>
+</section>
+
+<section id="staff-play">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">One more thing</p>
+        <h2>Play the staff.</h2>
+      </div>
+      <p class="lede" style="max-width:34ch;">Hover a dot to hear it, click to add it to a tune. It's all one happy scale, nothing here can sound wrong.</p>
+    </div>
+
+    <div class="staff-board" id="staffBoard">
+      <div class="row-labels" id="rowLabels"></div>
+      <div class="grid-area">
+        <svg class="staff-lines-bg" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="0" y1="5.55" x2="100" y2="5.55"/>
+          <line x1="0" y1="27.7" x2="100" y2="27.7"/>
+          <line x1="0" y1="50" x2="100" y2="50"/>
+          <line x1="0" y1="72.2" x2="100" y2="72.2"/>
+          <line x1="0" y1="94.4" x2="100" y2="94.4"/>
+        </svg>
+        <div class="note-grid" id="noteGrid"></div>
+        <div class="playhead" id="playhead"></div>
+      </div>
+    </div>
+
+    <div class="staff-controls">
+      <button class="hero-cta" id="staffPlayBtn" type="button">▶ Play my tune</button>
+      <button class="ghost-btn" id="staffRandomBtn" type="button">🎲 Surprise me</button>
+      <button class="ghost-btn" id="staffClearBtn" type="button">Clear</button>
+      <span class="staff-hint" id="staffHint">tap once to turn on sound</span>
+    </div>
   </div>
 </section>
 
@@ -714,6 +796,149 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   renderExpLabel();
   window.scrollTo({top:0, behavior:"smooth"});
 });
+/* ---------- staff player ---------- */
+const STAFF_ROWS = [
+  { name:"G5", freq:783.99 },
+  { name:"E5", freq:659.25 },
+  { name:"D5", freq:587.33 },
+  { name:"C5", freq:523.25 },
+  { name:"A4", freq:440.00 },
+  { name:"G4", freq:392.00 },
+  { name:"E4", freq:329.63 },
+  { name:"D4", freq:293.66 },
+  { name:"C4", freq:261.63 }
+];
+const STEP_COUNT = 16;
+const staffSteps = new Array(STEP_COUNT).fill(null);
+
+let audioCtx = null;
+function ensureAudio(){
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  return audioCtx;
+}
+function playTone(freq, duration = 0.3, peakGain = 0.15){
+  const ctx = ensureAudio();
+  const t0 = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  osc.type = "sine";
+  osc.frequency.value = freq;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0, t0);
+  gain.gain.linearRampToValueAtTime(peakGain, t0 + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(t0);
+  osc.stop(t0 + duration + 0.05);
+}
+
+const rowLabelsEl = document.getElementById("rowLabels");
+const noteGridEl = document.getElementById("noteGrid");
+const playheadEl = document.getElementById("playhead");
+
+STAFF_ROWS.forEach(r => {
+  const span = document.createElement("span");
+  span.textContent = r.name;
+  rowLabelsEl.appendChild(span);
+});
+
+function toggleNote(row, col, cell){
+  if (staffSteps[col] === row){
+    staffSteps[col] = null;
+    cell.classList.remove("active");
+    return;
+  }
+  document.querySelectorAll(`.note-cell[data-col="${col}"].active`).forEach(c => c.classList.remove("active"));
+  staffSteps[col] = row;
+  cell.classList.add("active");
+  playTone(STAFF_ROWS[row].freq, 0.35, 0.16);
+}
+
+for (let row = 0; row < STAFF_ROWS.length; row++){
+  for (let col = 0; col < STEP_COUNT; col++){
+    const cell = document.createElement("div");
+    cell.className = "note-cell" + (col % 4 === 0 && col !== 0 ? " beat" : "");
+    cell.dataset.row = row;
+    cell.dataset.col = col;
+    cell.tabIndex = 0;
+    cell.setAttribute("role", "button");
+    cell.setAttribute("aria-label", `${STAFF_ROWS[row].name}, step ${col + 1}`);
+    cell.addEventListener("mouseenter", () => playTone(STAFF_ROWS[row].freq, 0.22, 0.09));
+    cell.addEventListener("click", () => toggleNote(row, col, cell));
+    cell.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " "){ e.preventDefault(); toggleNote(row, col, cell); }
+    });
+    noteGridEl.appendChild(cell);
+  }
+}
+
+let staffPlaying = false;
+let staffTimer = null;
+let staffStep = 0;
+
+function staffTick(){
+  const pct = (staffStep + 0.5) / STEP_COUNT * 100;
+  playheadEl.style.left = pct + "%";
+  document.querySelectorAll(".note-cell.step-live").forEach(c => c.classList.remove("step-live"));
+  document.querySelectorAll(`.note-cell[data-col="${staffStep}"]`).forEach(c => c.classList.add("step-live"));
+
+  const row = staffSteps[staffStep];
+  if (row !== null){
+    playTone(STAFF_ROWS[row].freq, 0.3, 0.17);
+    const activeCell = document.querySelector(`.note-cell[data-col="${staffStep}"][data-row="${row}"]`);
+    if (activeCell){
+      activeCell.classList.add("pulse");
+      setTimeout(() => activeCell.classList.remove("pulse"), 220);
+    }
+  }
+  staffStep = (staffStep + 1) % STEP_COUNT;
+}
+
+const staffPlayBtn = document.getElementById("staffPlayBtn");
+function startStaffPlayback(){
+  staffPlaying = true;
+  staffStep = 0;
+  staffPlayBtn.textContent = "⏸ Stop";
+  staffTick();
+  staffTimer = setInterval(staffTick, 260);
+}
+function stopStaffPlayback(){
+  staffPlaying = false;
+  staffPlayBtn.textContent = "▶ Play my tune";
+  clearInterval(staffTimer);
+  document.querySelectorAll(".note-cell.step-live").forEach(c => c.classList.remove("step-live"));
+  playheadEl.style.left = "-10%";
+}
+staffPlayBtn.addEventListener("click", () => {
+  ensureAudio();
+  staffPlaying ? stopStaffPlayback() : startStaffPlayback();
+});
+
+document.getElementById("staffClearBtn").addEventListener("click", () => {
+  staffSteps.fill(null);
+  document.querySelectorAll(".note-cell.active").forEach(c => c.classList.remove("active"));
+});
+
+document.getElementById("staffRandomBtn").addEventListener("click", () => {
+  ensureAudio();
+  document.querySelectorAll(".note-cell.active").forEach(c => c.classList.remove("active"));
+  for (let col = 0; col < STEP_COUNT; col++){
+    if (Math.random() < 0.55){
+      const row = Math.floor(Math.random() * STAFF_ROWS.length);
+      staffSteps[col] = row;
+      const cell = document.querySelector(`.note-cell[data-col="${col}"][data-row="${row}"]`);
+      if (cell) cell.classList.add("active");
+    } else {
+      staffSteps[col] = null;
+    }
+  }
+});
+
+const staffHint = document.getElementById("staffHint");
+document.getElementById("staffBoard").addEventListener("pointerdown", () => {
+  ensureAudio();
+  if (staffHint) staffHint.style.opacity = "0";
+}, { once:true });
 </script>
 </body>
 </html>
